@@ -52,6 +52,12 @@ const login = async (req, res) => {
             { expiresIn: '1h' }
         );
         
+        res.cookie('token', token, {
+            httpOnly: true,    
+            secure: true,     
+            sameSite: 'strict',
+            maxAge: 3600000  
+        })
 
         res.status(200).json({
             status: "OK",
