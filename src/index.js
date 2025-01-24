@@ -3,6 +3,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
+const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.js')
 const carRoutes = require('./routes/car.js')
 dotenv.config()
@@ -14,9 +15,15 @@ db()
 
 
 const app = express()
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:5173',  
+    credentials: true,  
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+};
+app.use(cors(corsOptions))
 app.use(bodyParser.json({ limit: "30mb", extended: true }))
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }))
+app.use(cookieParser());
 app.use('/api', authRoutes)
 app.use('/api', carRoutes)
 const PORT = 5000

@@ -28,20 +28,28 @@ const CarSchema = new mongoose.Schema({
         required: true,
         min: 1,
     },
-    steering: {
+    driveType : {
         type: String,
         required: true,
         trim: true
     },
-    gasoline: {
-        type: String,
+    fuelCapacity : {
+        type: Number,
         required: true,
-        trim: true
+        min: 0
     },
     price: {
         type: Number,
         required: true,
         min: 0,
+    },
+    rentDay: {
+        type: Number,
+        min: 1
+    },
+    rentUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
     }
 });
 

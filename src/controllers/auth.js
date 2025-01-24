@@ -49,14 +49,14 @@ const login = async (req, res) => {
         const token = jwt.sign(
             { id: user._id, username: user.username },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '5h' }
         );
         
         res.cookie('token', token, {
-            httpOnly: true, 
-            secure: false,  
-            sameSite: 'strict', 
-            maxAge: 3600000 
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000 // 1 hour
         })
 
         res.status(200).json({
@@ -70,4 +70,16 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { register, login }
+const getUser = async (req, res) => {
+    try {
+        const user = await AuthSchema.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ msg: 'Bele bir sey yoxdu' });
+        }
+        res.status(200).json({ user });
+    } catch (error) {
+        res.status(500).json({ msg: "Server Xetasi" });
+    }
+};
+
+module.exports = { register, login, getUser }
