@@ -11,7 +11,12 @@ const AuthSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    favList: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'cars'
     }
+    ]
 })
 
 

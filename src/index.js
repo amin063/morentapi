@@ -6,6 +6,7 @@ const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.js')
 const carRoutes = require('./routes/car.js')
+const favRoutes = require('./routes/fav.js')
 dotenv.config()
 // DATABASE CONNECTIONS
 const db = require('./config/database.js')
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }))
 app.use(cookieParser());
 app.use('/api', authRoutes)
 app.use('/api', carRoutes)
+app.use('/api', favRoutes)
 const PORT = 5000
 
 
