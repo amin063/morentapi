@@ -131,16 +131,34 @@ const filterCars = async (req, res) => {
 
 const rentCar = async (req, res) => {
     try {
-        const { _id, rentDay } = req.body
+        const { _id, rentDay, name, address, number, city, cardNumber, cardHolder, cardDate, cardCvc, total, confirmation } = req.body
         const car = await CarSchema.findById(_id)
         if (!car) {
             return res.status(404).json({ message: "Bu ID ilə maşın tapılmadı" })
         }
-        if (car.isActive === false) {
+        if (car.rentDetails) {
             return res.status(400).json({ message: "Bu maşın artıq kirayədədir" })
         }
+        if (rentDay < 1) {
+            return res.status(400).json({ message: "Kiralama günləri 1-dən kiçik ola bilməz" })
+        }
+        if (rentDay > 30) {
+            return res.status(400).json({ message: "Kiralama günləri 30-dan böyük ola bilməz" })
+        }
+        if (!name || !address || !number || !city || !cardNumber || !cardHolder || !cardDate || !cardCvc || !total) {
+            return res.status(400).json({ message: "Bütün xanaları doldurun" })
+        }
+        if (!confirmation) {
+            return res.status(400).json({ message: "Təsdiq xanasını düzgün doldurun" })
+        }
+
+
+
         car.isActive = false;
         car.rentDay = rentDay;
+        car.rentDetails = {
+            name, address, number, city, cardNumber, cardHolder, cardDate, cardCvc, total, confirmation
+        }
         await car.save();
 
         res.status(200).json({
@@ -150,7 +168,10 @@ const rentCar = async (req, res) => {
         });
     }
     catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(400).send({
+            status: "Error",
+            message: error.message
+        });
     }
 }
 

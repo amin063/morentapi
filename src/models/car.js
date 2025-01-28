@@ -50,6 +50,9 @@ const CarSchema = new mongoose.Schema({
     rentUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
+    },
+    rentDetails: {
+        type: Object
     }
 });
 
