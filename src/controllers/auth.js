@@ -43,7 +43,7 @@ const login = async (req, res) => {
         const passwordCompare = await bcrypt.compare(password, user.password);
 
         if (!passwordCompare) {
-            return res.status(401).json({ status: 401 })
+            return res.status(401).json({ message: "Yanlış şifrə və ya istifadəçi" })
         }
 
         const token = jwt.sign(
@@ -82,4 +82,13 @@ const getUser = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getUser }
+const logout = async (req, res) => {
+    try {
+        res.clearCookie('token');
+        res.status(200).json({ msg: 'Ugurla cixis edildi' });
+    } catch (error) {
+        res.status(500).json({ msg: "Server Xetasi" });
+    }
+}
+
+module.exports = { register, login, getUser, logout }
