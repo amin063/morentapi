@@ -106,7 +106,7 @@ const filterCars = async (req, res) => {
             }
         }
 
-        // Filterə uyğun maşınları tap
+
         const cars = await CarSchema.find(filter);
 
         if (cars.length === 0) {
@@ -136,9 +136,10 @@ const rentCar = async (req, res) => {
         if (!car) {
             return res.status(404).json({ message: "Bu ID ilə maşın tapılmadı" })
         }
-        if (car.rentDetails) {
-            return res.status(400).json({ message: "Bu maşın artıq kirayədədir" })
+        if (car.rentDetails.name) {
+            return res.status(400).json({aaa: car.rentDetails, message: "Bu maşın artıq kirayədədir" });
         }
+        
         if (rentDay < 1) {
             return res.status(400).json({ message: "Kiralama günləri 1-dən kiçik ola bilməz" })
         }
@@ -154,11 +155,11 @@ const rentCar = async (req, res) => {
 
 
 
-        car.isActive = false;
         car.rentDay = rentDay;
         car.rentDetails = {
             name, address, number, city, cardNumber, cardHolder, cardDate, cardCvc, total, confirmation
         }
+        car.rentHistory.push({ carName: car.name, carImg: car.img, username: name, rentDay, number, total })
         await car.save();
 
         res.status(200).json({
@@ -175,5 +176,64 @@ const rentCar = async (req, res) => {
     }
 }
 
+const getAllRentHistory = async (req, res) => {
+    try {
+        // Bütün maşınları tap
+        const cars = await CarSchema.find();
 
-module.exports = { addCar, getCars, getCarDetails, filterCars, deleteCar, rentCar }
+        // Kirayə verilmiş maşınları və ümumi qazancı hesablamaq
+        let totalEarnings = 0;
+        let rentedCars = [];
+
+        cars.forEach(car => {
+            if (car.rentHistory.length > 0) {
+                rentedCars.push(...car.rentHistory);
+                car.rentHistory.forEach(rent => {
+                    totalEarnings += rent.total; // Ümumi qazancı topla
+                });
+            }
+        });
+
+        res.status(200).json({
+            status: "OK",
+            totalEarnings, // Ümumi qazanc
+            rentedCars // Bütün kirayə verilmiş maşınlar
+        });
+
+    } catch (error) {
+        res.status(400).json({
+            status: "Error",
+            message: error.message
+        });
+    }
+};
+
+const withdrawalCar = async (req, res) => {
+    try {
+        const { _id } = req.body;
+        
+        const car = await CarSchema.findById(_id);
+        
+        if (!car) {
+            return res.status(404).json({ message: "Belə maşın yoxdur" });
+        }
+
+        car.rentDetails = null; // Tam null edirik
+        await car.save();
+
+        res.status(200).json({
+            status: "OK",
+            message: "Təhvil alındı",
+            car
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "Error",
+            message: error.message
+        });
+    }
+};
+
+
+
+module.exports = { addCar, getCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRentHistory, withdrawalCar }

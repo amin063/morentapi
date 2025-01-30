@@ -1,59 +1,36 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const CarSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    img: {
-        type: String,
-        required: true,
-        trim: true,
-        match: /^https?:\/\/.*\.(jpg|jpeg|png|gif|webp)$/i 
-    },
-    desc: {
-        type: String,
-        required: true,
-        trim: true,
-        maxlength: 500
-    },
-    type: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    capacity: {
-        type: Number,
-        required: true,
-        min: 1,
-    },
-    driveType : {
-        type: String,
-        required: true,
-        trim: true
-    },
-    fuelCapacity : {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    price: {
-        type: Number,
-        required: true,
-        min: 0,
-    },
-    rentDay: {
-        type: Number,
-        min: 1
-    },
-    rentUser: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-    },
+    name: String,
+    img: String,
+    desc: String,
+    type: String,
+    capacity: Number,
+    driveType: String,
+    fuelCapacity: Number,
+    price: Number,
     rentDetails: {
-        type: Object
-    }
+        name: String,
+        address: String,
+        number: String,
+        city: String,
+        cardNumber: String,
+        cardHolder: String,
+        cardDate: String,
+        cardCvc: String,
+        total: Number,
+        confirmation: Boolean,
+        date: { type: Date, default: Date.now }
+    },
+    rentHistory: [{
+        carName: String,
+        carImg: String,
+        username: String,
+        rentDay: Number,
+        number: String,
+        total: Number,
+        date: { type: Date, default: Date.now }
+    }]
 });
 
-module.exports = mongoose.model('car', CarSchema);
+module.exports = mongoose.model("Car", CarSchema);
