@@ -4,7 +4,7 @@ const addCar = async (req, res) => {
         const { name, img, desc, type, capacity, driveType, fuelCapacity, price } = req.body
 
         const newCar = new CarSchema({ name, img, desc, type, capacity, driveType, fuelCapacity, price })
-
+        car.rentDetails = null;
         await newCar.save()
 
         res.status(201).json({
@@ -137,9 +137,9 @@ const rentCar = async (req, res) => {
             return res.status(404).json({ message: "Bu ID ilə maşın tapılmadı" })
         }
         if (car.rentDetails.name) {
-            return res.status(400).json({aaa: car.rentDetails, message: "Bu maşın artıq kirayədədir" });
+            return res.status(400).json({ aaa: car.rentDetails, message: "Bu maşın artıq kirayədədir" });
         }
-        
+
         if (rentDay < 1) {
             return res.status(400).json({ message: "Kiralama günləri 1-dən kiçik ola bilməz" })
         }
@@ -211,9 +211,9 @@ const getAllRentHistory = async (req, res) => {
 const withdrawalCar = async (req, res) => {
     try {
         const { _id } = req.body;
-        
+
         const car = await CarSchema.findById(_id);
-        
+
         if (!car) {
             return res.status(404).json({ message: "Belə maşın yoxdur" });
         }
