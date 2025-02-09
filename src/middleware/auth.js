@@ -1,4 +1,3 @@
-// filepath: /c:/Users/abbas/OneDrive/Desktop/finalmorent/MORENT/server/src/middleware/auth.js
 const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
