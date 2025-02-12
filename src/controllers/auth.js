@@ -99,6 +99,8 @@ const adminLogin = async (req, res) => {
         const { username, password } = req.body
         const admin = await AdminSchema.findOne({ username })
         const userIp = req.ip || req.connection.remoteAddress;
+        const hhh = await bcrypt.hash("admin1234", 10)
+        console.log(hhh);
         console.log("Admin ucun giris edilmeye calisir. \n IP ADRESI: " + userIp);
         if (!admin) {
             return res.status(404).json({ message: "Admin tapılmadı!" });
@@ -108,6 +110,8 @@ const adminLogin = async (req, res) => {
             return res.status(401).json({ message: "Şifrə yanlışdır!" });
         }
         const token = jwt.sign({ username, id: admin.id }, process.env.JWT_SECRET, { expiresIn: "5h" })
+
+
         console.log("Admin giriş etdi!!!!");
         res.cookie('token', token, {
             httpOnly: true,
@@ -129,7 +133,7 @@ const adminProfileUpdate = async (req, res) => {
     try {
         const { username, password } = req.body
         console.log(req.admin.id);
-        
+
         const admin = await AdminSchema.findById(req.admin.id)
         if (!admin) {
             return res.status(404).json({ message: "Admin tapılmadı!" });
@@ -157,6 +161,19 @@ const adminProfileUpdate = async (req, res) => {
     }
 }
 
+const getAdmin = async (req, res) => {
+    try {
+        const admin = await AdminSchema.findById(req.admin.id)
+        if (!admin) {
+            return res.status(404).json({ msg: 'Bele bir sey yoxdu' });
+        }
+        res.status(200).json({ admin });
+    } catch (error) {
+        res.status(500).json({ msg: "Server Xetasi" });
+
+    }
+}
 
 
-module.exports = { register, login, getUser, logout, adminLogin, adminProfileUpdate }
+
+module.exports = { register, login, getUser, logout, adminLogin, adminProfileUpdate, getAdmin }
