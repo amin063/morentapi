@@ -4,7 +4,7 @@ const addCar = async (req, res) => {
         const { name, img, desc, type, capacity, driveType, fuelCapacity, price } = req.body
 
         const newCar = new CarSchema({ name, img, desc, type, capacity, driveType, fuelCapacity, price })
-        car.rentDetails = null;
+        newCar.rentDetails = null;
         await newCar.save()
 
         res.status(201).json({

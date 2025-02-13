@@ -9,7 +9,8 @@ const carRoutes = require('./routes/car.js')
 const favRoutes = require('./routes/fav.js')
 dotenv.config()
 // DATABASE CONNECTIONS
-const db = require('./config/database.js')
+const db = require('./config/database.js');
+const { showAdmin } = require('./controllers/auth.js');
 db()
 
 
@@ -17,9 +18,9 @@ db()
 
 const app = express()
 const corsOptions = {
-    origin: 'http://localhost:5173',  
-    credentials: true,  
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 };
 app.use(cors(corsOptions))
 app.use(bodyParser.json({ limit: "30mb", extended: true }))
@@ -31,6 +32,7 @@ app.use('/api', favRoutes)
 const PORT = 5000
 
 
+showAdmin()
 
 app.listen(PORT, () => {
     console.log(`${PORT} da isleyir`);
