@@ -10,7 +10,6 @@ const favRoutes = require('./routes/fav.js')
 dotenv.config()
 // DATABASE CONNECTIONS
 const db = require('./config/database.js');
-const { showAdmin } = require('./controllers/auth.js');
 db()
 
 
@@ -32,7 +31,7 @@ app.use('/api', favRoutes)
 const PORT = 5000
 
 
-showAdmin()
+
 
 app.listen(PORT, () => {
     console.log(`${PORT} da isleyir`);

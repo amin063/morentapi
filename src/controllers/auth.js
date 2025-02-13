@@ -173,12 +173,4 @@ const getAdmin = async (req, res) => {
 
     }
 }
-
-const showAdmin = async () => {
-    const hhh = await bcrypt.hash("admin123", 10)
-        console.log(hhh);
-}
-
-
-
-module.exports = { register, login, getUser, logout, adminLogin, adminProfileUpdate, getAdmin, showAdmin }
+module.exports = { register, login, getUser, logout, adminLogin, adminProfileUpdate, getAdmin }
