@@ -87,7 +87,9 @@ const getUser = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        res.clearCookie('token');
+        res.clearCookie('token', {
+            sameSite: 'None'
+        });
         res.status(200).json({ msg: 'Ugurla cixis edildi' });
     } catch (error) {
         res.status(500).json({ msg: "Server Xetasi" });
@@ -116,7 +118,7 @@ const adminLogin = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'None',
             maxAge: 3600000
         })
         res.status(200).json({
