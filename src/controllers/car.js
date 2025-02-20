@@ -84,23 +84,20 @@ const filterCars = async (req, res) => {
         const { type, capacity, price } = req.query;
         const filter = {};
 
-        // Type üçün filtr
         if (type) {
-            const typeArray = Array.isArray(type) ? type : [type]; // Tək dəyər də gəlsə, array-a çeviririk
-            filter.type = { $in: typeArray }; // Type array ilə uyğun gələnlər
+            const typeArray = Array.isArray(type) ? type : [type];
+            filter.type = { $in: typeArray };
         }
 
-        // Capacity üçün filtr
         if (capacity) {
             const capacityArray = Array.isArray(capacity) ? capacity : [capacity];
-            filter.capacity = { $in: capacityArray }; // Capacity array ilə uyğun gələnlər
+            filter.capacity = { $in: capacityArray };
         }
 
-        // Price üçün filtr (<=)
         if (price) {
-            const parsedPrice = parseFloat(price); // Price dəyərini rəqəmə çevir
+            const parsedPrice = parseFloat(price);
             if (!isNaN(parsedPrice)) {
-                filter.price = { $lte: parsedPrice }; // Price, verilən dəyərdən kiçik və ya bərabər olmalı
+                filter.price = { $lte: parsedPrice };
             } else {
                 return res.status(400).json({ message: "Price düzgün rəqəm olmalıdır" });
             }
