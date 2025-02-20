@@ -4,9 +4,9 @@ const { addCar, getCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRe
 const auth = require('../middleware/auth.js');
 const adminAuth = require('../middleware/admin.js')
 
-router.get('/cars', getCars)
-router.get('/details/:id', getCarDetails)
-router.get('/filter', filterCars)
+router.get('/cars', auth, getCars)
+router.get('/details/:id', auth, getCarDetails)
+router.get('/filter', auth, filterCars)
 router.post('/rent', auth, rentCar)
 router.get('/getHistory', adminAuth, getAllRentHistory)
 router.post('/add', adminAuth, addCar)
