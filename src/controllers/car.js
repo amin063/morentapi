@@ -178,10 +178,7 @@ const rentCar = async (req, res) => {
 
 const getAllRentHistory = async (req, res) => {
     try {
-        // Bütün maşınları tap
         const cars = await CarSchema.find();
-
-        // Kirayə verilmiş maşınları və ümumi qazancı hesablamaq
         let totalEarnings = 0;
         let rentedCars = [];
 
@@ -189,15 +186,15 @@ const getAllRentHistory = async (req, res) => {
             if (car.rentHistory.length > 0) {
                 rentedCars.push(...car.rentHistory);
                 car.rentHistory.forEach(rent => {
-                    totalEarnings += rent.total; // Ümumi qazancı topla
+                    totalEarnings += rent.total;
                 });
             }
         });
 
         res.status(200).json({
             status: "OK",
-            totalEarnings, // Ümumi qazanc
-            rentedCars // Bütün kirayə verilmiş maşınlar
+            totalEarnings,
+            rentedCars 
         });
 
     } catch (error) {
@@ -218,7 +215,7 @@ const withdrawalCar = async (req, res) => {
             return res.status(404).json({ message: "Belə maşın yoxdur" });
         }
 
-        car.rentDetails = null; // Tam null edirik
+        car.rentDetails = null;
         await car.save();
 
         res.status(200).json({
