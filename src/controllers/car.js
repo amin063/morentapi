@@ -21,13 +21,25 @@ const addCar = async (req, res) => {
 }
 
 const getCars = async (req, res) => {
+
     try {
+        const { page = 1, limit = 10 } = req.query
+        const skip = (page - 1) * limit;
+
         const carLists = await CarSchema.find()
+            .skip(skip)
+            .limit(parseInt(limit));
+
+        const totalCars = await CarSchema.countDocuments();
         if (carLists.length === 0) {
             return res.status(404).json({ message: "Heç bir maşın tapılmadı" });
         }
+
         res.status(200).json({
             status: "OK",
+            totalCars,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(totalCars / limit),
             carLists
         })
     } catch (error) {
@@ -191,7 +203,7 @@ const getAllRentHistory = async (req, res) => {
         res.status(200).json({
             status: "OK",
             totalEarnings,
-            rentedCars 
+            rentedCars
         });
 
     } catch (error) {
