@@ -51,6 +51,24 @@ const getCars = async (req, res) => {
 
 }
 
+const getAllCars = async (req, res) => {
+    try {
+        const cars = await CarSchema.find(); 
+        if (cars.length === 0) {
+            return res.status(404).json({ message: "Heç bir maşın tapılmadı" });
+        }
+        res.status(200).json({
+            status: "OK",
+            cars,
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "Error",
+            message: error.message,
+        });
+    }
+}
+
 const deleteCar = async (req, res) => {
     try {
         const { id } = req.params
@@ -242,4 +260,4 @@ const withdrawalCar = async (req, res) => {
 
 
 
-module.exports = { addCar, getCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRentHistory, withdrawalCar }
+module.exports = { addCar, getCars, getAllCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRentHistory, withdrawalCar }
