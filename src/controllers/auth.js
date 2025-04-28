@@ -136,35 +136,44 @@ const adminLogin = async (req, res) => {
 
 const adminProfileUpdate = async (req, res) => {
     try {
-        const { username, password } = req.body
+        const { username, password } = req.body;
         console.log(req.admin.id);
 
-        const admin = await AdminSchema.findById(req.admin.id)
+        const admin = await AdminSchema.findById(req.admin.id);
         if (!admin) {
             return res.status(404).json({ message: "Admin tapılmadı!" });
         }
+
         if (username.length < 5) {
             return res.status(400).json({ message: "İstifadəçi adı ən az 5 simvoldan ibarət olmalıdır." });
         }
+
         if (password.length < 5) {
             return res.status(400).json({ message: "Şifrə ən az 5 simvoldan ibarət olmalıdır." });
         }
-        const passwordHashed = await bcrypt.hash(password, 10)
-        admin.username = username
-        admin.password = passwordHashed
-        await admin.save()
-        const updatedAdmin = {
-            username: admin.username,
-            id: admin._id,
-        };
+
+        const passwordHashed = await bcrypt.hash(password, 10);
+        admin.username = username;
+        admin.password = passwordHashed;
+        await admin.save();
+
+        // --- Şifre değiştiği için mevcut token'ı geçersiz hale getir ---
+        // Eğer token cookie içindeyse temizle
+        res.clearCookie("token"); // Eğer cookie'de tutuyorsan "token" adını doğru yaz
+
+        // Eğer token header veya başka bir yerde tutuluyorsa orada da logout mantığını uygula
+        // Örneğin DB'de token listesi varsa: tokenı sil
+
         res.status(200).json({
             status: "OK",
-            admin: updatedAdmin
+            message: "Profil yeniləndi. Zəhmət olmasa yenidən daxil olun!",
         });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Profil yenilənərkən xəta baş verdi!" });
     }
-}
+};
+
 
 const getAdmin = async (req, res) => {
     try {
