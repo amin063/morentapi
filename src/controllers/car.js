@@ -258,6 +258,31 @@ const withdrawalCar = async (req, res) => {
     }
 };
 
+const updateCar = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedData = req.body;
+
+        const car = await CarSchema.findByIdAndUpdate(id, updatedData, { new: true });
+
+        if (!car) {
+            return res.status(404).json({ message: "Bu ID ilə maşın tapılmadı" });
+        }
+
+        res.status(200).json({
+            status: "OK",
+            message: "Maşın uğurla güncellendi",
+            car
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "Error",
+            message: error.message
+        });
+    }
+};
 
 
-module.exports = { addCar, getCars, getAllCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRentHistory, withdrawalCar }
+
+
+module.exports = { addCar, getCars, getAllCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRentHistory, withdrawalCar, updateCar };

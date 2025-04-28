@@ -1,10 +1,11 @@
 const express = require('express')
 const router = express.Router();
-const { addCar, getCars, getAllCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRentHistory, withdrawalCar } = require('../controllers/car.js');
+const { addCar, getCars, getAllCars, getCarDetails, filterCars, deleteCar, rentCar, getAllRentHistory, withdrawalCar, updateCar } = require('../controllers/car.js');
 const auth = require('../middleware/auth.js');
 const adminAuth = require('../middleware/admin.js')
 
 router.get('/cars', getCars)
+router.put('/updatecar/:id', updateCar);
 router.get('/allcars', getAllCars)
 router.get('/details/:id', getCarDetails)
 router.get('/filter', filterCars)
